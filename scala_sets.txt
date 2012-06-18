@@ -1,0 +1,259 @@
+object blahblah {
+
+
+abstract class SemiGroup[A] {
+def add(x: A, y: A): A
+}
+
+
+
+abstract class Monoid[A] extends SemiGroup[A] {
+def unit: A
+}
+
+
+implicit object stringMonoid extends Monoid[String] {
+def add(x: String, y: String): String = x.concat(y)
+def unit: String = ""
+}
+
+
+implicit object intMonoid extends Monoid[Int] {
+def add(x: Int, y: Int): Int = x + y
+def unit: Int = 0
+}
+
+
+
+implicit def monoid2String(x: BetterGreeter): String = "intString"
+
+  
+  
+  
+  def sort[A <% Ordered[A]](xs: List[A]): List[A] =
+if (xs.isEmpty || xs.tail.isEmpty) xs
+else {
+val (ys, zs) = xs.splitAt(xs.length / 2)
+merge(sort(ys), sort(zs))
+}
+
+
+def merge[A <% Ordered[A]](xs: List[A], ys: List[A]): List[A] =
+if (xs.isEmpty) ys
+else if (ys.isEmpty) xs
+else if (xs.head < ys.head) xs.head :: merge(xs.tail, ys)
+else ys.head :: merge(xs, ys.tail)
+  
+
+
+def sum[A](xs: List[A])(implicit m: Monoid[A]): A =
+if (xs.isEmpty) m.unit
+else m.add (
+    xs.head, sum(xs.tail)(m)
+    	   )
+    	   
+    	   
+    	   
+    	
+    	  def main (args : Array[String]) : Unit = {
+  
+  
+println ( 
+  // new NonEmptySet(1, new EmptySet, new EmptySet)
+ new NonEmptySet(5, new NonEmptySet(1, new EmptySet, new EmptySet), new NonEmptySet(9, new EmptySet, new EmptySet))
+.union(
+ //new NonEmptySet(2, new NonEmptySet(1, new EmptySet, new EmptySet), new NonEmptySet(3, new EmptySet, new EmptySet))
+  new NonEmptySet(11, new EmptySet, new EmptySet)
+)
+ 
+
+)
+
+  
+  
+ 
+}
+
+import javax.print.attribute.standard.MediaSize.Other;
+
+import scala.Left;
+import scala.annotation.tailrec
+def sum(a: Int, b: Int): Int = {
+  @tailrec def iter(a : Int, result : Int) : Int = {
+if (a<=0) result
+else 
+  iter(a-1, result+a)
+}
+iter(b-a, b)
+}
+
+
+
+def sumOrProduct(f: Int => Int)(a: Int, b: Int)(op: (Int,Int) => Int)  (base: Int) : Int =  {
+  
+  if (a>b) base
+  else       op(   f(a) ,  sumOrProduct(f)(a + 1, b)(op: (Int,Int) => Int)  (base: Int)  )
+}
+
+
+def sum(f: Int => Int)(a: Int, b: Int): Int =
+if (a > b) 0
+else f(a) + sum(f)(a + 1, b)
+
+
+
+def product(f: Int => Int)(a: Int, b: Int): Int = {
+if (a > b) 1
+else 
+  f(a) * product(f)(a + 1, b) 
+     
+}
+
+
+def fac(n : Int) : Int =   {
+  product ( x => x) (1,n)
+}
+
+
+
+
+
+
+
+def mapFun[A, B](xs: List[A])( f: A => B): List[B] =
+(xs :\ List[B]())      {(a, b) => f(a) :: b}
+
+
+
+def lengthFun[A](xs: List[A]): Int =
+(0 /: xs){ (a, b) => a + 1 }
+
+
+
+
+trait IntSet {
+def incl(x: Int): IntSet
+def contains(x: Int): Boolean
+def isEmpty() : Boolean
+def union(other : IntSet): IntSet
+def intersection(other : IntSet): IntSet
+def descend(set : IntSet): IntSet
+}
+
+
+
+
+
+
+class EmptySet extends IntSet {
+def contains(x: Int): Boolean = false
+def incl(x: Int): IntSet = new NonEmptySet(x, new EmptySet, new EmptySet)
+override def  toString = ""
+def isEmpty() : Boolean = {
+  return true
+}
+
+def descend(acc: IntSet) : IntSet = {
+  acc
+}
+
+def union( other : IntSet) :IntSet = {
+  return other
+}
+def intersection( other : IntSet) :IntSet = {
+  return this
+}
+}
+
+
+
+class NonEmptySet(elem: Int, left: IntSet, right: IntSet) extends IntSet {
+  
+  override def toString =  elem + "\n (L " + left.toString + " ) "  + "\n (R " + right.toString + " ) "
+  
+  def isEmpty() : Boolean = {
+    return false;
+  }
+  
+def contains(x: Int): Boolean =
+if (x < elem) left contains x
+else if (x > elem) right contains x
+else true
+
+
+
+def incl(x: Int): IntSet =
+if (x < elem) new NonEmptySet(elem, left incl x, right)
+else if (x > elem) new NonEmptySet(elem, left, right incl x)
+else this
+
+
+
+def descend( acc : IntSet):IntSet = {
+   if ((left.isEmpty) && (right.isEmpty))   { //this set only has one element (leaf)
+    return acc.incl(elem)
+  }
+   right.descend(left.descend( acc)).incl(elem)
+}
+
+
+
+
+def union( other : IntSet) : IntSet = {
+  return this.descend( other.descend(new EmptySet)  )
+   
+}
+
+
+
+
+def intersection(other : IntSet): IntSet = {
+  if ((left.isEmpty) && (right.isEmpty))   { //this set only has one element
+    if (other.contains(elem)) return this
+    else return new EmptySet
+     
+  }
+  //
+  return new EmptySet
+}
+
+
+
+
+
+}
+
+
+
+
+
+
+
+
+  	   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
